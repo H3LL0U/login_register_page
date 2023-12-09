@@ -19,6 +19,8 @@ password = Entry(frame, text = "Password: ", textvariable=password_str,font=("Ar
 password.grid(column = 1, row = 1)
 password_lable.grid(column = 0, row = 1)
 
+
+
 buttons_frame = Frame(root, )
 def cancel ():
     root.destroy()
