@@ -6,7 +6,7 @@ from lege_pagina import lege_app
 root = Tk()
 root.title("login")
 root.geometry("500x300")
-frame = Frame(root,pady=20, )
+frame = Frame(root,pady=20)
 
 email_str = StringVar()
 login = Entry(frame, textvariable=email_str, font=("Arial", 18))

@@ -3,7 +3,7 @@ from tkinter import *
 from tkinter import ttk
 def lege_app():
     from tkinter import messagebox
-    geo = "250x250"
+    geo = "500x300"
     root = Tk()
     root.geometry(geo)
     frame = Frame(root)
@@ -62,7 +62,7 @@ def lege_app():
                 
         except sqlite3.Error as error:
             conn.close()
-            print("something wen wrong",  error)
+            print("something went wrong",  error)
             
     
     accounts = get_all_names()
@@ -73,12 +73,42 @@ def lege_app():
     submit_button.grid(row=2, column=1)
 
 
+    frame_artsen = Frame(root)
+    frame_artsen.pack()
+    ziektes_select_list = StringVar(value=["Leukemie", "Kanker", "Taalstoornis", "Diabetes", "Astma"])
+    ziektes_select_label = Label(frame_artsen,text = "Ziekte: ")
+    ziektes_select_label.grid(column = 0, row = 0)
+    ziektes_select = Listbox(frame_artsen, listvariable=ziektes_select_list , selectmode="single", exportselection = False)
+    ziektes_select.grid(column = 1, row = 0)
+
+    artsen_select_list = StringVar(value=["Dr. Jansen", "Dr. de Vries", "Dr. Bakker", "Dr. van der Meer"])
+    arts_select_label = Label(frame_artsen,text = "Arts: ")
+    arts_select_label.grid(column = 2, row = 0)
+    arts_select = Listbox(frame_artsen, listvariable=artsen_select_list, selectmode="single", exportselection = False)
+    arts_select.grid(column = 3, row = 0 )
+    def update_Label(event):
+
+        selected_items = arts_select.curselection()
+        selectedid_arts = "".join(arts_select.get(i) for i in selected_items)
+        selectedid_ziekte = "".join(ziektes_select.get(i) for i in ziektes_select.curselection())
+        a = Label(root, text=f"U heeft gekozen voor {selectedid_arts} voor een behandeling voor {selectedid_ziekte}.")
+        #for widget in root.winfo_children():
+            #if isinstance(widget, Label) and widget.winfo_exists():
+                #widget.destroy()
+        if selectedid_ziekte and selectedid_arts:
+
+
+            a.pack()
+
+
+    arts_select.bind("<<ListboxSelect>>", update_Label)
+    ziektes_select.bind("<<ListboxSelect>>", update_Label)
 
 
 
 
 
-    root.geometry(geo)
+
 
 
 
