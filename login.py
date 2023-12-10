@@ -1,3 +1,4 @@
+import sqlite3
 from tkinter import *
 from tkinter import messagebox
 from register import register_window
@@ -36,13 +37,31 @@ def register():
 
 register_button = Button(buttons_frame, text = "Register", font=("Arial", 13), relief = GROOVE, command = register)
 register_button.grid(column= 0, row = 2, )
+def check_for_existing_accounts():
+    try:
+        conn = sqlite3.connect("Register.db")
+        cur = conn.cursor()
+        get_passwords_and_emails = "SELECT wachtwoord, email FROM register"
+        cur.execute(get_passwords_and_emails)
+        data = cur.fetchall()
+        conn.close()
+    except sqlite3.Error as error:
+        print(error)
+    finally:
+        if conn:
+            conn.close()
+        return data
+
 
 def login_func():
-    if "@" in email_str.get() and password_str.get()!="":
-        messagebox.showinfo(title="success!", message = "You have successfully loged in!")
+    data = check_for_existing_accounts()
+    for i in data:
+        if [password_str.get(), email_str.get()] == list(i):
+        #if "@" in email_str.get() and password_str.get()!="":
+            messagebox.showinfo(title="success!", message = "You have successfully loged in!")
 
-        root.destroy()
-        lege_app()
+            root.destroy()
+            lege_app()
 
     else:
         messagebox.showerror(title="Error", message = "You've not filled the forms correctly")

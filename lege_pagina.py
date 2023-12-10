@@ -3,7 +3,7 @@ from tkinter import *
 from tkinter import ttk
 def lege_app():
     from tkinter import messagebox
-    geo = "250x100"
+    geo = "250x250"
     root = Tk()
     root.geometry(geo)
     frame = Frame(root)
@@ -16,6 +16,20 @@ def lege_app():
 
 
     selected_account_name = StringVar()
+    def get_all_names():
+        try:
+            conn = sqlite3.connect("Register.db")
+            cur = conn.cursor()
+            select_names = "Select naam FROM register"
+            cur.execute(select_names)
+            data = cur.fetchall()
+            conn.close()
+            return data
+        except sqlite3.Error as error:
+            print(error)
+        finally:
+            if conn:
+                conn.close()
     def get_naam_database():
         global accounts
         global labels_namen
@@ -51,7 +65,7 @@ def lege_app():
             print("something wen wrong",  error)
             
     
-    accounts = []
+    accounts = get_all_names()
     
     combobox = ttk.Combobox(frame,values = accounts, textvariable= selected_account_name)
     combobox.grid( column=1, row =1)
