@@ -1,15 +1,15 @@
 from tkinter import *
 import sqlite3
-#from tkinter import messagebox
 
 
 
 
+#create register window
 def register_window():
 
     from tkinter import messagebox
 
-
+    #Create all the entries
     root = Toplevel()
     root.title("Register")
     root.geometry("500x300")
@@ -54,6 +54,7 @@ def register_window():
     woonplaats.grid(column=1, row=5)
 
     buttons_frame = Frame(root, )
+    #Create buttons
     def cancel ():
         root.destroy()
 

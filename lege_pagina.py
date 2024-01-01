@@ -1,8 +1,122 @@
 import sqlite3
 from tkinter import *
 from tkinter import ttk
+#create a new window after being logged in
 def lege_app():
     from tkinter import messagebox
+    geo = "500x300"
+    root = Tk()
+    root.geometry(geo)
+    frame = Frame(root)
+    frame.pack()
+    #initializing accounts variable for the Listbox with names of the doctors
+    accounts = StringVar(value=[])
+    #initial lable
+
+    Label(frame,text="Koppel een specialist aan een ziektebeeld").pack()
+
+    #Radiobuttons
+
+    radio_buttons_frame = Frame(root)
+    radio_buttons_frame.pack()
+    #set values
+    gekozen_artsen = []
+    def set_value(variable, new_value):
+        nonlocal gekozen_artsen
+        nonlocal Listboxes
+        Listboxes[0].delete(0,'end')
+
+        
+        
+        for i in new_value:
+            Listboxes[0].insert('end', i)
+        
+        gekozen_artsen = list(new_value)
+        gekozen_artsen = [" ".join(i) for i in gekozen_artsen]
+        
+            
+        
+        
+    
+    def get_doctor_names_from_database():
+        nonlocal accounts
+        nonlocal Listboxes
+        data = ()
+        try:
+            conn = sqlite3.connect('Artsen.db')
+            cur = conn.cursor()
+            get_name = f"SELECT name, last_name FROM register"
+            cur.execute(get_name)
+            data = cur.fetchall()
+            set_value(accounts,data)
+            
+            conn.close()
+        except sqlite3.Error as error:
+            print(error)
+        finally:
+            conn.close()
+    def remove_doctors():
+        gekozen_artsen = []
+        Listboxes[0].delete(0, "end")
+    Radiobuttons_value = IntVar()
+    Radiobuttons_value.set(1)
+    radio_buttons = [Radiobutton(radio_buttons_frame,text="Database",variable= Radiobuttons_value, value=1, command=get_doctor_names_from_database),
+                     Radiobutton(radio_buttons_frame,text="Bestand",variable=Radiobuttons_value,value=2, command=remove_doctors),
+                     Radiobutton(radio_buttons_frame,text="Tekstveld",variable=Radiobuttons_value , value=3, command= remove_doctors)
+                     ]
+    for idx, i in enumerate(radio_buttons):
+        i.grid(column=idx,row=0)
+
+    #Entry field with radio_buttons functions
+        
+    frame_for_selection = Frame(root)
+    frame_for_selection.pack()
+    
+    entry_selection_variable = StringVar()
+    entry_selection_variable.set("2")
+    Radiobuttons_value_selection_frame = IntVar()
+    Radiobuttons_value_selection_frame.set(1)
+    objects_of_the_selection_frame = [Entry(frame_for_selection,textvariable = entry_selection_variable ), 
+                                    Radiobutton(frame_for_selection,text = "Specialist",variable=Radiobuttons_value_selection_frame,value=1),
+                                    Radiobutton(frame_for_selection,text="Ziektebeeld",variable=Radiobuttons_value_selection_frame,value=2)
+                                    ]
+    for idx,i in enumerate(objects_of_the_selection_frame):
+        i.grid(column=idx,row=0)
+    #Listboxes
+    Listbox_frame = Frame(root)
+    Listbox_frame.pack()
+    ziektes = ["Leukemie", "Kanker", "Taalstoornis", "Diabetes", "Astma"]
+    Listboxes = [Listbox(Listbox_frame, height=10,listvariable=accounts, exportselection=False),Listbox(Listbox_frame,height=10,listvariable=ziektes, exportselection=False)]
+    for idx, a in enumerate(Listboxes):
+        a.grid(column=idx,row= 0)
+    for i in ziektes:
+        Listboxes[1].insert('end', i)
+    
+
+    #maak Koppeling button
+    Label_variable = StringVar()
+    def maak_koppeling():
+        nonlocal Label_variable
+        if Listboxes[0].curselection() and Listboxes[1].curselection():
+            
+            Label_variable.set(f"U heeft gekozen voor {gekozen_artsen[Listboxes[0].curselection()[0]]} voor een behandeling voor {ziektes[Listboxes[1].curselection()[0]]}.")
+            
+            Label(Label_frame , text=Label_variable.get()).pack()
+        else:
+            messagebox.showwarning("Warning!","You haven't chosen both options, please try again.")
+            
+    button = Button(Listbox_frame,text="Maak koppeling", command=maak_koppeling)
+    button.grid(column=0,row=1)
+    
+    
+    #lable'
+    Label_frame = Frame(root)
+    Label_frame.pack()
+    
+    
+
+#Opdracht van les 6
+'''    from tkinter import messagebox
     geo = "500x300"
     root = Tk()
     root.geometry(geo)
@@ -59,7 +173,7 @@ def lege_app():
             for idx, i in enumerate(labels_woonplaatsen):
                 Label(frame, text = i).grid(column=2, row = idx+4)
             
-                
+              
         except sqlite3.Error as error:
             conn.close()
             print("something went wrong",  error)
@@ -117,4 +231,4 @@ def lege_app():
 
 
 
-    root.mainloop()
+    root.mainloop()'''
